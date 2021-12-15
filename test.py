@@ -16,3 +16,6 @@ doc3 = np.array([2, 0, 2, 2])  # 문서3 벡터
 
 def cos_sim(A, B):
     return dot(A, B) / (norm(A) * norm(B))
+
+
+import pandas as pd
