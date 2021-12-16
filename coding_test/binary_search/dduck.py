@@ -1,10 +1,3 @@
-from bisect import bisect_right, bisect_left
-
-# 인풋을 받으면,
-
-# 4, 6
-
-
 def height_search(array, m):
 
     start = 1
@@ -32,14 +25,3 @@ n, m = map(int, input().split())
 dduck = list(map(int, input().split()))
 
 print(height_search(dduck, m))
-
-
-# for i in height:
-#     for j in sorted_dduck:
-#         if j-i <= 0:
-#             cutted.append(0)
-#         else :
-#             cutted.append(j-i)
-#     if sum(cutted) == m:
-#         return i
-#     elif sum(cutted) > m:
