@@ -14,5 +14,5 @@
 .history
 .ionide
 .idea/
-
+.venv
 data/
