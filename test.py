@@ -1,21 +1,30 @@
-print("hello world")
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
-import pandas as pd
+tokenizer = AutoTokenizer.from_pretrained(
+    "kakaobrain/kogpt",
+    revision="KoGPT6B-ryan1.5b-float16",  # or float32 version: revision=KoGPT6B-ryan1.5b
+    bos_token="[BOS]",
+    eos_token="[EOS]",
+    unk_token="[UNK]",
+    pad_token="[PAD]",
+    mask_token="[MASK]",
+)
+model = AutoModelForCausalLM.from_pretrained(
+    "kakaobrain/kogpt",
+    revision="KoGPT6B-ryan1.5b-float16",  # or float32 version: revision=KoGPT6B-ryan1.5b
+    pad_token_id=tokenizer.eos_token_id,
+    torch_dtype="auto",
+    low_cpu_mem_usage=True,
+).to(device="cuda", non_blocking=True)
+_ = model.eval()
 
-a = pd.read_csv()
+prompt = "인간처럼 생각하고, 행동하는 '지능'을 통해 인류가 이제까지 풀지 못했던"
+with torch.no_grad():
+    tokens = tokenizer.encode(prompt, return_tensors="pt").to(
+        device="cuda", non_blocking=True
+    )
+    gen_tokens = model.generate(tokens, do_sample=True, temperature=0.8, max_length=64)
+    generated = tokenizer.batch_decode(gen_tokens)[0]
 
-
-import numpy as np
-from numpy import dot
-from numpy.linalg import norm
-
-doc1 = np.array([0, 1, 1, 1])  # 문서1 벡터
-doc2 = np.array([1, 0, 1, 1])  # 문서2 벡터
-doc3 = np.array([2, 0, 2, 2])  # 문서3 벡터
-
-
-def cos_sim(A, B):
-    return dot(A, B) / (norm(A) * norm(B))
-
-
-import pandas as pd
+print(generated)
